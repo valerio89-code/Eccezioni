@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eccezioni.Code;
+using System;
 using System.IO;
 using System.Windows.Forms;
 
@@ -11,53 +12,28 @@ namespace Eccezioni
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btn_stampa_Click(object sender, EventArgs e)
         {
+            var p = GetPersona();
             try
             {
-                Method1(textBox1.Text, textBox2.Text);
-                MessageBox.Show("nessun errore nell'evento click");
+                Helpers.StampaPersona(p);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{ex.Message} + {Environment.NewLine} + {ex.StackTrace}");
-            }
+                MessageBox.Show(ex.ToString());
+            }           
         }
 
-        private void Method1(string tb1, string tb2)
+        private Persona GetPersona()
         {
-            var strWriter = new StreamWriter(@"c:\Corso c#\esempio.csv");
-            try
+            if (textBox2.Text == string.Empty) return null;
+            return new Persona()
             {
-                var int1 = int.Parse(tb1);
-                var int2 = int.Parse(tb2);
-                var result = int1 / int2;
-                strWriter.WriteLine($"operazione con risultato {result}");
-                label1.Text = result.ToString();
-            }
-            catch (FormatException ex)
-            {
-                //Logger.Log(ex);
-                throw ex;
-            }
-            catch (DivideByZeroException)
-            {
-                MessageBox.Show("non è possibile dividere per 0");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message:{ex.Message}");
-                textBox3.Text = $"StackTrace:{ex.StackTrace}";
-                MessageBox.Show($"InnerException:{ex.InnerException}");
-                throw;
-            }
-            finally
-            {
-                strWriter.Dispose();
-                textBox4.Text = "siamo entrati nel blocco finally";
-            }
-        }
+                Cognome = textBox2.Text,
+                Nome = textBox1.Text
+            };
 
+        }
     }
 }
